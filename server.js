@@ -18,7 +18,7 @@ mongoose.connect('mongodb+srv://singhsaurav182001:aCQJ79c76g1mTSyw@cluster0.qcvw
 const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
-  password: String,// Date of birth field
+  password: String, // Date of birth field
 });
 
 const User = mongoose.model('User', userSchema);
@@ -52,13 +52,25 @@ app.post('/login', async (req, res) => {
   res.json({ token, user });
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-}
-);
-
-// Start server
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
+app.get('/users/emails', async (req, res) => {
+  try {
+    // Fetch only the email field from all users
+    const users = await User.find({}, 'email');
+    res.json(users.map(user => user.email)); // Return an array of emails
+  } catch (err) {
+    res.status(500).send("Error: " + err.message);
+  }
 });
+
+
+
+
+app.get('/', (req, res) => {
+    res.send('Hello !');
+});
+
+
+const PORT = 5000
+app.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`)
+})
