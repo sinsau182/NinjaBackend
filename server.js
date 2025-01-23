@@ -16,7 +16,8 @@ mongoose.connect('mongodb+srv://singhsaurav182001:aCQJ79c76g1mTSyw@cluster0.qcvw
 
 // User schema and model with dob field
 const userSchema = new mongoose.Schema({
-  name: String,
+  fname: { type: String, required: true },
+  lname: { type: String, required: true },
   email: { type: String, unique: true },
   password: String, // Date of birth field
 });
@@ -25,12 +26,12 @@ const User = mongoose.model('User', userSchema);
 
 // Register Route
 app.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { fname, lname, email, password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const user = new User({ name, email, password: hashedPassword });
+    const user = new User({ fname, lname, email, password: hashedPassword });
     await user.save();
     res.status(201).send("User registered successfully");
   } catch (err) {
